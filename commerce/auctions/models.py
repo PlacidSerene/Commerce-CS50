@@ -21,7 +21,11 @@ class Comment(models.Model):
 
 class Auction(models.Model):
     created_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="auction_created")
-    
+    title = models.CharField(max_length=64)
+    description = models.CharField(max_length=256)
+    image =  models.URLField(max_length=512, blank=True)
+    categories = models.URLField(max_length=64, blank=True)
+    start_bid = models.FloatField()
 
 
 
