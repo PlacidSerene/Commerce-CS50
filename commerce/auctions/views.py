@@ -105,5 +105,14 @@ def listing(request):
     pass
 
 def title(request, title):
-    return render(request, "auctions/title.html")
+    try:
+        auction = Auction.objects.get(title=title)
+    except Auction.DoesNotExist:
+        raise Http404("Flight not found")
+    return render(request, "auctions/title.html",{
+        "auction_title":auction.title,
+        "auction_image": auction.image,
+        "auction_desc": auction.description,
+
+    })
     # Check if title is in the database using queries
