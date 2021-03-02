@@ -17,7 +17,10 @@ class Listing(forms.Form):
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    
+    return render(request, "auctions/index.html",{
+        "auctions": Auction.objects.all()
+    })
 
 
 def login_view(request):
@@ -78,13 +81,10 @@ def register(request):
 #     return create(request)
 
 
-# @login_required(login_url="login")
+@login_required(login_url="login")
 def create(request):
     if request.method == "POST":
-        if not request.user.is_authenticated:
-            return render(request, "auctions/create.html",{
-            "message": "You need to login to use this feature"
-        }) 
+
         form = Listing(request.POST)
         if form.is_valid():
             title = form.cleaned_data["title"]
