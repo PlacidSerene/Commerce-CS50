@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block title %}
+{{auction_name}}
+{% endblock %}
+
+{% block body %}
+
+<h3>This is the auction name: {{auction_title}}</h3>
+{% if auction_image == "" %}
+<h3>There's no image for now</h3>
+{% else %}
+<img src="{{auction_image}}" alt="">
+<h3>This is the auction image</h3>
+{% endif %}
+
+<h3>This is the auction description: {{auction_desc}}</h3>
+{% endblock %}
