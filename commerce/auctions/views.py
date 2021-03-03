@@ -8,6 +8,7 @@ from .models import User, Auction, Bid, Comment, WatchList
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+# ////////////////////////// Form /////////////////////////////
 class Listing(forms.Form):
     title = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     description = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control", "rows":"1", "columns":"2"}))
@@ -15,6 +16,18 @@ class Listing(forms.Form):
     categories = forms.CharField(required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
     start_bid = forms.FloatField(widget=forms.TextInput(attrs={"class": "form-control"}))
 
+# ////////////////////// Helping function /////////////////////
+
+## Getting the highest bid in an auction:
+def highest(auction):
+    all_bids = auction.bid_autions.all()
+    highest_bid = ""
+    if len(all_bids) != 0:
+        highest_bid = all_bids[0].price
+        for bid in all_bids:
+            if bid.price > highest_bid:
+                highest_bid = bid
+    return highest_bid
 
 def index(request):
     
@@ -107,11 +120,10 @@ def listing(request):
 def title(request, title):
     try:
         auction = Auction.objects.get(title=title)
-        bids = auction.bid_autions.all()
     except Auction.DoesNotExist:
         raise Http404("Flight not found")
     return render(request, "auctions/title.html",{
         "auction":auction,
-        "bids": bids
+        "highest_bid": highest(auction),
     })
    

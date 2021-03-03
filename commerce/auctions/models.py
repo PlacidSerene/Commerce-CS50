@@ -11,13 +11,13 @@ class Auction(models.Model):
     categories = models.URLField(max_length=64, blank=True)
     start_bid = models.FloatField()
     active = models.BooleanField(default=True, blank=False)
-    
+
 class Bid(models.Model):
     price = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="bid_autions")
     def __str__(self):
-        return f"{self.id}: {self.price}"
+        return f"{self.price}"
 
 class Comment(models.Model):
     comment = models.CharField(max_length=256)

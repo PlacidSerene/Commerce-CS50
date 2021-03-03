@@ -14,14 +14,19 @@
             <input type="submit" name="Close Auction">
         </form>
     {% endif %}
-
+    {% if highest_bid %}
+    <h4>{{highest_bid}}</h4>
+    {% else %}
+    <h4> Currently, no one has bid yet!</h4>
+    {% endif %}
     {% if user.is_authenticated and auction.active == True and auction.created_user != user %}
     <button>Add to watchlist</button>
-    
+    <form action="">
+        <input type="text">
+        <input type="submit" value="bid">
+    </form>
     {% endif %}
-    {% for bid in bids %}
-    <li>{{bid}}</li>
-    {% endfor %}
+    
 </div>
 <h3>This is the auction name: {{auction.title}}</h3>
 {% if auction.image == "" %}
