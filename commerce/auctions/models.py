@@ -26,8 +26,11 @@ class Auction(models.Model):
     image =  models.URLField(max_length=512, blank=True)
     categories = models.URLField(max_length=64, blank=True)
     start_bid = models.FloatField()
+    active = models.BooleanField(default=True, blank=False)
 
-
+class WatchList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="watchlist")
 
 
 

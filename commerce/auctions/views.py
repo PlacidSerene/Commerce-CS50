@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
-from .models import User, Auction, Bid, Comment
+from .models import User, Auction, Bid, Comment, WatchList
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -110,9 +110,7 @@ def title(request, title):
     except Auction.DoesNotExist:
         raise Http404("Flight not found")
     return render(request, "auctions/title.html",{
-        "auction_title":auction.title,
-        "auction_image": auction.image,
-        "auction_desc": auction.description,
+        "auction":auction
 
     })
-    # Check if title is in the database using queries
+   

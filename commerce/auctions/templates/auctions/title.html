@@ -6,12 +6,22 @@
 {% endblock %}
 
 {% block body %}
+<div>
 
-<h3>This is the auction name: {{auction_title}}</h3>
-{% if auction_image == "" %}
+    {% if user == auction.created_user%}
+        <h4>You are the creator</h4>
+        <button>Close the auction</button>
+    {% endif %}
+
+    {% if user.is_authenticated and auction.active == True and auction.created_user != user %}
+    <button>Add to watchlist</button>
+    {% endif %}
+</div>
+<h3>This is the auction name: {{auction.title}}</h3>
+{% if auction.image == "" %}
 <h3>There's no image for now</h3>
 {% else %}
-<img src="{{auction_image}}" alt="">
+<img src="{{auction.image}}" alt="">
 <h3>This is the auction image</h3>
 {% endif %}
 
