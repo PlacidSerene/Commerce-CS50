@@ -107,10 +107,11 @@ def listing(request):
 def title(request, title):
     try:
         auction = Auction.objects.get(title=title)
+        bids = auction.bid_autions.all()
     except Auction.DoesNotExist:
         raise Http404("Flight not found")
     return render(request, "auctions/title.html",{
-        "auction":auction
-
+        "auction":auction,
+        "bids": bids
     })
    

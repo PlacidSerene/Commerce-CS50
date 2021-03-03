@@ -10,12 +10,18 @@
 
     {% if user == auction.created_user%}
         <h4>You are the creator</h4>
-        <button>Close the auction</button>
+        <form action="">
+            <input type="submit" name="Close Auction">
+        </form>
     {% endif %}
 
     {% if user.is_authenticated and auction.active == True and auction.created_user != user %}
     <button>Add to watchlist</button>
+    
     {% endif %}
+    {% for bid in bids %}
+    <li>{{bid}}</li>
+    {% endfor %}
 </div>
 <h3>This is the auction name: {{auction.title}}</h3>
 {% if auction.image == "" %}
