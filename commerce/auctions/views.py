@@ -9,11 +9,22 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 # ////////////////////////// Form /////////////////////////////
+
+CATEGORY_CHOICES = [
+    ("", "No Category"),
+    ("fashion","Fashion"),
+    ("toy","Toy"),
+    ("electronic","Electronic"),
+    ("home","Home"),
+    ("education","Education"),
+    ("general","General")
+]
+
 class Listing(forms.Form):
     title = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     description = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control", "rows":"1", "columns":"2"}))
     image = forms.URLField(required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
-    categories = forms.CharField(required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
+    categories = forms.CharField(required=False, widget=forms.Select(choices=CATEGORY_CHOICES, attrs={"class": "form-control"}))
     start_bid = forms.FloatField(widget=forms.TextInput(attrs={"class": "form-control"}))
 
 # ////////////////////// Helping function /////////////////////
@@ -29,6 +40,8 @@ def highest(auction):
                 highest_bid = bid
     return highest_bid
 
+
+#////////////////////// Views Functions /////////////////////
 def index(request):
     
     return render(request, "auctions/index.html",{
@@ -87,12 +100,6 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-# def message(request):
-    
-#     if request.user.is_anonymous:
-#         messages.warning(request, 'You must login to use this feature')
-#     return create(request)
-
 
 @login_required(login_url="login")
 def create(request):
@@ -127,3 +134,8 @@ def title(request, title):
         "highest_bid": highest(auction),
     })
    
+
+def categories(request):
+    return render(request, "auctions/categories.html",{
+        ""
+    })
