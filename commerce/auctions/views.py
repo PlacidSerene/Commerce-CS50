@@ -128,7 +128,7 @@ def title(request, title):
     try:
         auction = Auction.objects.get(title=title)
     except Auction.DoesNotExist:
-        raise Http404("Flight not found")
+        raise Http404("Auction not found")
     return render(request, "auctions/title.html",{
         "auction":auction,
         "highest_bid": highest(auction),
@@ -136,6 +136,34 @@ def title(request, title):
    
 
 def categories(request):
+    auctions = Auction.objects.all()
+    categories = []
+    for auction in auctions:
+
+        if auction.categories not in categories:
+            if (auction.categories == "") and ("No Category" not in categories):
+                categories.append("No Category")
+            else:
+                categories.append(auction.categories)
+    
     return render(request, "auctions/categories.html",{
-        ""
+        "categories":categories
     })
+
+def category(request, title):
+    if title == "No Category":
+        auctions = Auction.objects.filter(categories="")
+        return render(request, "auctions/category.html", {
+        "auctions": auctions,
+        "title": "No Category"
+    })
+    else:
+        auctions = Auction.objects.filter(categories=title)
+        return render(request, "auctions/category.html", {
+            "auctions": auctions,
+            "title": title
+        })
+    # return render(request, "auctions/category.html")
+    
+
+
