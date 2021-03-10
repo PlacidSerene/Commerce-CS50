@@ -16,7 +16,7 @@ class Auction(models.Model):
     active = models.BooleanField(default=True, blank=False)
 
 class Bid(models.Model):
-    price = models.IntegerField()
+    price = models.FloatField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="bid_autions")
     def __str__(self):

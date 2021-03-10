@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
-from django.forms import ModelForm, TextInput, Textarea, Select
+from django.forms import ModelForm, TextInput, Textarea, Select, NumberInput
 from .models import User, Auction, Bid, Comment, WatchList
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -31,8 +31,14 @@ class Listing(ModelForm):
             "description": Textarea(attrs={'class':'form-control'}),
             "image": TextInput(attrs={'class':'form-control'}),
             "categories": Select(choices=CATEGORY_CHOICES, attrs={'class':'form-control'}),
-            "start_bid": TextInput(attrs={'class':'form-control'}),
+            "start_bid": NumberInput(attrs={'class':'form-control'}),
         }
+
+    def clean_start_bid(self, *args, **kwargs):
+        start_bid = self.cleaned_data.get("start_bid")
+        if float(start_bid) < 1:
+            raise forms.ValidationError("Should be greater than zero")
+        return start_bid
     # title = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     # description = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control", "rows":"1", "columns":"2"}))
     # image = forms.URLField(required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
@@ -118,19 +124,22 @@ def create(request):
     if request.method == "POST":
 
         form = Listing(request.POST)
+        
         if form.is_valid():
-            title = form.cleaned_data["title"]
-            description = form.cleaned_data["description"]
-            image = form.cleaned_data["image"]
-            categories = form.cleaned_data["categories"]
-            start_bid = form.cleaned_data["start_bid"]
-            Auction.objects.create(created_user=request.user, title=title, description=description, image=image, categories=categories, start_bid=start_bid)
-            return HttpResponseRedirect(reverse("title", kwargs={"title":title}))
+            listing = form.save(commit=False)
+            listing.created_user = request.user
+            listing.save()
+            return HttpResponseRedirect(reverse("title", kwargs={"title":listing.title}))
+        else:
+            return render(request, "auctions/create.html",{
+            "form": Listing(request.POST),
+            "error": "Something is wrong"
+        })
 
     else:
 
         return render(request, "auctions/create.html",{
-            "form": Listing()
+            "form": Listing(),
         })
 
 def listing(request):

@@ -5,6 +5,9 @@ Create Listing
 {% endblock %}
 
 {% block body %}
+    {% if error %}
+        <h4>{{error}}</h4>
+    {% endif %}
     <form action="{% url 'create' %}" method="POST">
         {% csrf_token %}
         {{form}}
