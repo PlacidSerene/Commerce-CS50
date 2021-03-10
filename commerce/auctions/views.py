@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from django.core.validators import MinValueValidator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
+from django.forms import ModelForm, TextInput, Textarea, Select
 from .models import User, Auction, Bid, Comment, WatchList
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -20,12 +22,22 @@ CATEGORY_CHOICES = [
     ("general","General")
 ]
 
-class Listing(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
-    description = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control", "rows":"1", "columns":"2"}))
-    image = forms.URLField(required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
-    categories = forms.CharField(required=False, widget=forms.Select(choices=CATEGORY_CHOICES, attrs={"class": "form-control"}))
-    start_bid = forms.FloatField(widget=forms.TextInput(attrs={"class": "form-control"}))
+class Listing(ModelForm):
+    class Meta:
+        model = Auction
+        fields = ("title", "description", "image", "categories", "start_bid")
+        widgets = {
+            "title": TextInput(attrs={'class':'form-control'}),
+            "description": Textarea(attrs={'class':'form-control'}),
+            "image": TextInput(attrs={'class':'form-control'}),
+            "categories": Select(choices=CATEGORY_CHOICES, attrs={'class':'form-control'}),
+            "start_bid": TextInput(attrs={'class':'form-control'}),
+        }
+    # title = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
+    # description = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control", "rows":"1", "columns":"2"}))
+    # image = forms.URLField(required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
+    # categories = forms.CharField(required=False, widget=forms.Select(choices=CATEGORY_CHOICES, attrs={"class": "form-control"}))
+    # start_bid = forms.FloatField(widget=forms.TextInput(attrs={"class": "form-control"}), validators = [MinValueValidator(1.0)])
 
 # ////////////////////// Helping function /////////////////////
 
@@ -163,7 +175,7 @@ def category(request, title):
             "auctions": auctions,
             "title": title
         })
-    # return render(request, "auctions/category.html")
+
     
 
 

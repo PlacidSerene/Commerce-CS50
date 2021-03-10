@@ -4,6 +4,8 @@ from django.db import models
 
 class User(AbstractUser):
     pass
+
+
 class Auction(models.Model):
     created_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="auction_created")
     title = models.CharField(max_length=64)
