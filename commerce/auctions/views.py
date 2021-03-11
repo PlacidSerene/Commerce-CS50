@@ -160,7 +160,7 @@ def listing(request, listing_id):
             "highest_bid": highest(auction),
         })
     
- 
+    # Get all autions from watchlist 
     watchlist = [item.auction for item in request.user.watchlist.all()]
     return render(request, "auctions/listing.html",{
         "auction":auction,
@@ -206,8 +206,16 @@ def watchlist(request, user_id):
         "watchlist": watchlist,
     })
 
-def toggle_watchlist(request):
+def toggle_watchlist(request, user_id, listing_id):
     if request.method == "POST":
-        pass
-
+        value = request.POST.get("check")
+        user = User.objects.get(id=user_id)
+        auction = Auction.objects.get(id=listing_id)
+        if value == "notInList":
+            # add to watchlist
+            WatchList.objects.create(user=user, auction= auction)
+        if value == "inList":
+            instance = WatchList.objects.get(user=user, auction=auction)
+            instance.delete()
+        return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
 
