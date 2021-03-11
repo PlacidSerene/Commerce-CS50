@@ -134,7 +134,7 @@ def create(request):
             listing = form.save(commit=False)
             listing.created_user = request.user
             listing.save()
-            return HttpResponseRedirect(reverse("listing_id", kwargs={"listing_id":listing.id}))
+            return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing.id}))
         else:
             return render(request, "auctions/create.html",{
             "form": Listing(request.POST),
@@ -153,12 +153,22 @@ def listing(request, listing_id):
         auction = Auction.objects.get(id=listing_id)
     except Auction.DoesNotExist:
         raise Http404("Auction not found")
+    if request.user.is_anonymous:
+        return render(request, "auctions/listing.html",{
+            "auction":auction,
+            "bid_form": Bid(),
+            "highest_bid": highest(auction),
+        })
+    
+ 
+    watchlist = [item.auction for item in request.user.watchlist.all()]
     return render(request, "auctions/listing.html",{
         "auction":auction,
         "bid_form": Bid(),
         "highest_bid": highest(auction),
+        "watchlist": watchlist,
     })
-   
+    
 
 def categories(request):
     auctions = Auction.objects.all()
@@ -191,8 +201,13 @@ def category(request, category):
 
 
 def watchlist(request, user_id):
+    watchlist = request.user.watchlist.all()
     return render(request, "auctions/watchlist.html", {
-        "watchlist":request.user.watchlist.all()
+        "watchlist": watchlist,
     })
+
+def toggle_watchlist(request):
+    if request.method == "POST":
+        pass
 
 
