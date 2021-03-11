@@ -25,7 +25,7 @@ CATEGORY_CHOICES = [
 class Listing(ModelForm):
     class Meta:
         model = Auction
-        fields = ("title", "description", "image", "categories", "start_bid")
+        fields = ["title", "description", "image", "categories", "start_bid"]
         widgets = {
             "title": TextInput(attrs={'class':'form-control'}),
             "description": Textarea(attrs={'class':'form-control'}),
@@ -39,11 +39,16 @@ class Listing(ModelForm):
         if float(start_bid) < 1:
             raise forms.ValidationError("Should be greater than zero")
         return start_bid
-    # title = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
-    # description = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control", "rows":"1", "columns":"2"}))
-    # image = forms.URLField(required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
-    # categories = forms.CharField(required=False, widget=forms.Select(choices=CATEGORY_CHOICES, attrs={"class": "form-control"}))
-    # start_bid = forms.FloatField(widget=forms.TextInput(attrs={"class": "form-control"}), validators = [MinValueValidator(1.0)])
+    
+class Bid(ModelForm):
+    class Meta:
+        model = Bid
+        fields = ["price"]
+        widgets = {
+            "start_bid": NumberInput(attrs={'class':'form-control'}),
+        }
+
+    
 
 # ////////////////////// Helping function /////////////////////
 
@@ -129,7 +134,7 @@ def create(request):
             listing = form.save(commit=False)
             listing.created_user = request.user
             listing.save()
-            return HttpResponseRedirect(reverse("title", kwargs={"title":listing.title}))
+            return HttpResponseRedirect(reverse("listing_id", kwargs={"listing_id":listing.id}))
         else:
             return render(request, "auctions/create.html",{
             "form": Listing(request.POST),
@@ -142,16 +147,15 @@ def create(request):
             "form": Listing(),
         })
 
-def listing(request):
-    pass
 
-def title(request, title):
+def listing(request, listing_id):
     try:
-        auction = Auction.objects.get(title=title)
+        auction = Auction.objects.get(id=listing_id)
     except Auction.DoesNotExist:
         raise Http404("Auction not found")
-    return render(request, "auctions/title.html",{
+    return render(request, "auctions/listing.html",{
         "auction":auction,
+        "bid_form": Bid(),
         "highest_bid": highest(auction),
     })
    
@@ -171,20 +175,21 @@ def categories(request):
         "categories":categories
     })
 
-def category(request, title):
-    if title == "No Category":
+def category(request, category):
+    if category == "No Category":
         auctions = Auction.objects.filter(categories="")
         return render(request, "auctions/category.html", {
         "auctions": auctions,
         "title": "No Category"
     })
     else:
-        auctions = Auction.objects.filter(categories=title)
+        auctions = Auction.objects.filter(categories=category)
         return render(request, "auctions/category.html", {
             "auctions": auctions,
-            "title": title
+            "category": category
         })
 
-    
+def watchlist(request):
+    pass
 
 
