@@ -189,7 +189,10 @@ def category(request, category):
             "category": category
         })
 
-def watchlist(request):
-    pass
+
+def watchlist(request, user_id):
+    return render(request, "auctions/watchlist.html", {
+        "watchlist":request.user.watchlist.all()
+    })
 
 
