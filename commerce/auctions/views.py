@@ -37,20 +37,24 @@ class Listing(ModelForm):
     def clean_start_bid(self, *args, **kwargs):
         start_bid = self.cleaned_data.get("start_bid")
         if float(start_bid) < 1:
-            raise forms.ValidationError("Should be greater than zero")
+            raise forms.ValidationError("Should be at least $1")
         return start_bid
     
-class Bid(ModelForm):
+class Bid_Form(ModelForm):
     class Meta:
         model = Bid
         fields = ["price"]
         widgets = {
             "start_bid": NumberInput(attrs={'class':'form-control'}),
         }
-
+    def clean_price(self, *args, **kwargs):
+        price = self.cleaned_data.get("price")
+        if float(price) < 1:
+            raise forms.ValidationError("Should be at least $1")
+        return price
     
 
-# ////////////////////// Helping function /////////////////////
+# ////////////////////// Helping functions /////////////////////
 
 ## Getting the highest bid in an auction:
 def highest(auction):
@@ -149,26 +153,52 @@ def create(request):
 
 
 def listing(request, listing_id):
+    
     try:
         auction = Auction.objects.get(id=listing_id)
     except Auction.DoesNotExist:
         raise Http404("Auction not found")
-    if request.user.is_anonymous:
+    watchlist = ""
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            # Get all autions from watchlist 
+            watchlist = [item.auction for item in request.user.watchlist.all()]
         return render(request, "auctions/listing.html",{
             "auction":auction,
-            "bid_form": Bid(),
+            "bid_form": Bid_Form(),
             "highest_bid": highest(auction),
+            "watchlist": watchlist,
         })
-    
-    # Get all autions from watchlist 
-    watchlist = [item.auction for item in request.user.watchlist.all()]
-    return render(request, "auctions/listing.html",{
+    else: # for bids and comments
+        bid_price = request.POST.get('price', None)
+        if highest(auction): #If there's at least 1 bid
+            pass
+
+        # If currently there is no bid 
+        if int(bid_price) > auction.start_bid:
+            Bid.objects.create(price=bid_price, user=request.user, auction=auction)
+        return render(request, "auctions/listing.html",{
         "auction":auction,
-        "bid_form": Bid(),
+        "bid_form": Bid_Form(request.POST),
         "highest_bid": highest(auction),
         "watchlist": watchlist,
-    })
+        }
+        )
+        
+
+
     
+        #     if request.method == "POST":
+        # auction = Auction.objects.get(id=listing_id)
+        # form = Bid(request.POST)
+        # if form.is_valid():
+        #     price = form.cleaned_data["price"]
+            # if highest(auction): #If there's at least 1 bid
+            #     pass
+
+        #     if price < auction.start_bid:
+        #         return render(request, "auctionlisting")
+        
 
 def categories(request):
     auctions = Auction.objects.all()
@@ -215,7 +245,11 @@ def toggle_watchlist(request, user_id, listing_id):
             # add to watchlist
             WatchList.objects.create(user=user, auction= auction)
         if value == "inList":
+            # remove from watchlist
             instance = WatchList.objects.get(user=user, auction=auction)
             instance.delete()
         return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
 
+
+
+        
