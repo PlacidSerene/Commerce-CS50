@@ -18,14 +18,14 @@ class Auction(models.Model):
 class Bid(models.Model):
     price = models.FloatField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
-    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="bid_autions")
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="bid_auctions")
     def __str__(self):
         return f"{self.price}"
 
 class Comment(models.Model):
     comment = models.CharField(max_length=256)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
-    auction = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_autions")
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="comment_auctions")
     def __str__(self):
         return f"{self.id}: {self.comment}"
 

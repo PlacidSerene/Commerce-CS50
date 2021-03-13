@@ -45,20 +45,29 @@ class Bid_Form(ModelForm):
         model = Bid
         fields = ["price"]
         widgets = {
-            "start_bid": NumberInput(attrs={'class':'form-control'}),
+            "price": NumberInput(attrs={'class':'form-control'}),
         }
     def clean_price(self, *args, **kwargs):
         price = self.cleaned_data.get("price")
         if float(price) < 1:
             raise forms.ValidationError("Should be at least $1")
         return price
+
+class Comment_Form(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["comment"]
+        widgets = {
+            "comment": TextInput(attrs={'class':'form-control'}),
+        }
+
     
 
 # ////////////////////// Helping functions /////////////////////
 
 ## Getting the highest bid in an auction:
 def highest(auction):
-    all_bids = auction.bid_autions.all()
+    all_bids = auction.bid_auctions.all()
     highest_bid = ""
     if len(all_bids) != 0:
         highest_bid = all_bids[0]
@@ -158,41 +167,68 @@ def listing(request, listing_id):
         auction = Auction.objects.get(id=listing_id)
     except Auction.DoesNotExist:
         raise Http404("Auction not found")
-    watchlist = ""
-    if request.method == "GET":
-        if request.user.is_authenticated:
-            # Get all autions from watchlist 
-            watchlist = [item.auction for item in request.user.watchlist.all()]
-        return render(request, "auctions/listing.html",{
-            "auction":auction,
-            "bid_form": Bid_Form(),
-            "highest_bid": highest(auction),
-            "watchlist": watchlist,
-        })
-    else: # for bids and comments
-        error = ""
-        bid_price = float(request.POST.get('price', None))
-        if highest(auction): #If there's at least 1 bid
-            if bid_price > highest(auction).price:
-                Bid.objects.create(price=bid_price, user=request.user, auction=auction)
-                auction.current_winner = request.user
-                auction.save()
-            else:
-                error = "Your bid must be greater than the current highest bid"
-        # If currently there is no bid 
+    
+    if request.user.is_authenticated:
+        # Get all autions from watchlist 
+        watchlist = [item.auction for item in request.user.watchlist.all()]
+    return render(request, "auctions/listing.html",{
+        "auction":auction,
+        "bid_form": Bid_Form(),
+        "highest_bid": highest(auction),
+        "watchlist": watchlist,
+        "comment_form": Comment_Form(),
+        "comments": auction.comment_auctions.all()
+    })
+
+
+def bid(request, listing_id):
+    auction = Auction.objects.get(id=listing_id)
+    bid_price = float(request.POST.get('price'))
+    
+    if highest(auction): #If there's at least 1 bid
+        if bid_price > highest(auction).price:
+            Bid.objects.create(price=bid_price, user=request.user, auction=auction)
+            auction.current_winner = request.user
+            auction.save()
+            return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
         else:
-            if bid_price > auction.start_bid:
-                Bid.objects.create(price=bid_price, user=request.user, auction=auction)
-                auction.current_winner = request.user
-                auction.save()
-        return render(request, "auctions/listing.html",{
+            error = "Your bid must be greater than the current highest bid"
+            return render(request, "auctions/listing.html",{
+                "auction":auction,
+                "bid_form": Bid_Form(request.POST),
+                "highest_bid": highest(auction),
+                "watchlist": watchlist,
+                "comment_form": Comment_Form(),
+                "comment": auction.comment_auctions.all(),
+                "error": error,
+                }
+                )
+    # If currently there is no bid 
+    else:
+        if bid_price > auction.start_bid:
+            Bid.objects.create(price=bid_price, user=request.user, auction=auction)
+            auction.current_winner = request.user
+            auction.save()
+        return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
+
+    
+
+def comment(request, listing_id):
+    auction = Auction.objects.get(id=listing_id)
+    comment = request.POST.get('comment')
+    if comment != None:
+        Comment.objects.create(comment=comment, user=request.user, auction=auction)
+        return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
+    return render(request, "auctions/listing.html", {
         "auction":auction,
         "bid_form": Bid_Form(request.POST),
         "highest_bid": highest(auction),
         "watchlist": watchlist,
-        "error": error,
-        }
-        )
+        "comment_form": Comment_Form(),
+        "comment": auction.comment_auctions.all(),
+    })
+    
+
 
         
 
