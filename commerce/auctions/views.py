@@ -61,9 +61,9 @@ def highest(auction):
     all_bids = auction.bid_autions.all()
     highest_bid = ""
     if len(all_bids) != 0:
-        highest_bid = all_bids[0].price
+        highest_bid = all_bids[0]
         for bid in all_bids:
-            if bid.price > highest_bid:
+            if bid.price > highest_bid.price:
                 highest_bid = bid
     return highest_bid
 
@@ -170,34 +170,26 @@ def listing(request, listing_id):
             "watchlist": watchlist,
         })
     else: # for bids and comments
-        bid_price = request.POST.get('price', None)
+        error = ""
+        bid_price = float(request.POST.get('price', None))
         if highest(auction): #If there's at least 1 bid
-            pass
-
+            if bid_price > highest(auction).price:
+                Bid.objects.create(price=bid_price, user=request.user, auction=auction)
+            else:
+                error = "Your bid must be greater than the current highest bid"
         # If currently there is no bid 
-        if int(bid_price) > auction.start_bid:
-            Bid.objects.create(price=bid_price, user=request.user, auction=auction)
+        else:
+            if bid_price > auction.start_bid:
+                Bid.objects.create(price=bid_price, user=request.user, auction=auction)
         return render(request, "auctions/listing.html",{
         "auction":auction,
         "bid_form": Bid_Form(request.POST),
         "highest_bid": highest(auction),
         "watchlist": watchlist,
+        "error": error,
         }
         )
-        
 
-
-    
-        #     if request.method == "POST":
-        # auction = Auction.objects.get(id=listing_id)
-        # form = Bid(request.POST)
-        # if form.is_valid():
-        #     price = form.cleaned_data["price"]
-            # if highest(auction): #If there's at least 1 bid
-            #     pass
-
-        #     if price < auction.start_bid:
-        #         return render(request, "auctionlisting")
         
 
 def categories(request):
