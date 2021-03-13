@@ -175,12 +175,16 @@ def listing(request, listing_id):
         if highest(auction): #If there's at least 1 bid
             if bid_price > highest(auction).price:
                 Bid.objects.create(price=bid_price, user=request.user, auction=auction)
+                auction.current_winner = request.user
+                auction.save()
             else:
                 error = "Your bid must be greater than the current highest bid"
         # If currently there is no bid 
         else:
             if bid_price > auction.start_bid:
                 Bid.objects.create(price=bid_price, user=request.user, auction=auction)
+                auction.current_winner = request.user
+                auction.save()
         return render(request, "auctions/listing.html",{
         "auction":auction,
         "bid_form": Bid_Form(request.POST),
