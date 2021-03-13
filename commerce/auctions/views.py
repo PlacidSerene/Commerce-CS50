@@ -182,6 +182,10 @@ def listing(request, listing_id):
 
 
 def bid(request, listing_id):
+
+    if request.method == "GET":
+        raise Http404("Auction not found")
+        
     auction = Auction.objects.get(id=listing_id)
     bid_price = float(request.POST.get('price'))
     
@@ -214,21 +218,13 @@ def bid(request, listing_id):
     
 
 def comment(request, listing_id):
+    if request.method == "GET":
+        raise Http404("Auction not found")
     auction = Auction.objects.get(id=listing_id)
     comment = request.POST.get('comment')
-    if comment != None:
-        Comment.objects.create(comment=comment, user=request.user, auction=auction)
-        return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
-    return render(request, "auctions/listing.html", {
-        "auction":auction,
-        "bid_form": Bid_Form(request.POST),
-        "highest_bid": highest(auction),
-        "watchlist": watchlist,
-        "comment_form": Comment_Form(),
-        "comment": auction.comment_auctions.all(),
-    })
+    Comment.objects.create(comment=comment, user=request.user, auction=auction)
+    return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
     
-
 
         
 
