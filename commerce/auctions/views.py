@@ -184,7 +184,7 @@ def listing(request, listing_id):
 def bid(request, listing_id):
 
     if request.method == "GET":
-        raise Http404("Auction not found")
+        raise Http404("Page not found")
         
     auction = Auction.objects.get(id=listing_id)
     bid_price = float(request.POST.get('price'))
@@ -219,7 +219,7 @@ def bid(request, listing_id):
 
 def comment(request, listing_id):
     if request.method == "GET":
-        raise Http404("Auction not found")
+        raise Http404("Page not found")
     auction = Auction.objects.get(id=listing_id)
     comment = request.POST.get('comment')
     Comment.objects.create(comment=comment, user=request.user, auction=auction)
@@ -277,6 +277,16 @@ def toggle_watchlist(request, user_id, listing_id):
             instance = WatchList.objects.get(user=user, auction=auction)
             instance.delete()
         return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
+    
+def close_auction(request, listing_id):
+    if request.method == "GET":
+        raise Http404("Page not found")
+    else:
+        auction = Auction.objects.get(id=listing_id)
+        auction.active = False
+        auction.save()
+        return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id})) 
+
 
 
 

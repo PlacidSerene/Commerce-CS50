@@ -3,6 +3,7 @@
 {% block body %}
     <h2>Active Listings</h2>
     {% for auction in auctions %}
+        {% if auction.active == True %}
         <div>
             
             <h4>{{auction.title}}</h4>
@@ -13,6 +14,7 @@
             <button> Add to Watchlist</button>
             {% endif %}
         </div>
+        {% endif %}
     {% empty %}
         <h3>There's no auction for now!</h3>
     {% endfor %}
