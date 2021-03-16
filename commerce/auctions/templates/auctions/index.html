@@ -1,23 +1,23 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-    {% for auction in auctions %}
-        {% if auction.active == True %}
-        <div>
-            
-            <h4>{{auction.title}}</h4>
-            <h4>Created by: {{auction.created_user.username}}</h4>
-            <img src="{{auction.image}}" alt="">
-            <h4>Starter bid: {{auction.start_bid}}</h4>
-            {% if user.is_authenticated and user != auction.created_user %}
-            <button> Add to Watchlist</button>
-            {% endif %}
-        </div>
-        {% endif %}
-    {% empty %}
-        <h3>There's no auction for now!</h3>
-    {% endfor %}
+<h2 class="title">Active Listings</h2>
+{% for auction in auctions %}
+{% if auction.active == True %}
+<div>
 
-    
+    <h4>{{auction.title}}</h4>
+    <h4>Created by: {{auction.created_user.username}}</h4>
+    <img src="{{auction.image}}" alt="">
+    <h4>Starter bid: {{auction.start_bid}}</h4>
+    {% if user.is_authenticated and user != auction.created_user %}
+    <button> Add to Watchlist</button>
+    {% endif %}
+</div>
+{% endif %}
+{% empty %}
+<h3>There's no auction for now!</h3>
+{% endfor %}
+
+
 {% endblock %}
