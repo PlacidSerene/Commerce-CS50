@@ -7,32 +7,49 @@
     <title>{% block title %}Auctions{% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Vollkorn:ital@1&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 1.3rem; color:black">
+        <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <h2 class="logo"><em><i class="fab fa-sellcast"></i> Auction</em></h3>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse text-center" id="navbarsExample11">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'create' %}">Create Listing</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'watchlist' user.id %}">Watchlist</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-item nav-link"> Signed in as <em>{{ user.username }}</em>.</div>
+                    </li>
 
 
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #28527a;">
-        <a class="navbar-brand" href="#">
-            <h3 class="logo"><em>Auction</em></h3>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse nav-change" id="navbarNavAltMarkup">
-            <div class="navbar-nav nav-left">
-                <a class="nav-item nav-link" href="{% url 'categories' %}">Categories</a>
-                <a class="nav-item nav-link" href="{% url 'create' %}">Create Listing</a>
-                {% if user.is_authenticated %}
-                <a class="nav-item nav-link" href="{% url 'watchlist' user.id %}">Watchlist</a>
-                <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
-                <div class="nav-item nav-link"> Signed in as <em>{{ user.username }}</em>.</div>
-                {% else %}
-                <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
-                {% endif %}
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
