@@ -1,48 +1,43 @@
+body {
+  font-family: "Merriweather", serif;
+}
 body main {
-  margin: 0 auto;
   width: 75%;
+  margin: 0 auto;
+  margin-top: 2%;
+}
+
+.card {
+  opacity: 0.85;
 }
 
 .card:hover {
   -webkit-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
-  opacity: 1.25;
+  opacity: 1;
+  font-family: "Merriweather", serif;
+}
+
+a:hover {
+  color: #caf7e3;
 }
 
 .logo {
   text-align: center;
   color: #99bbad;
-  font-family: "Merriweather", serif;
-  padding-top: 10px;
 }
 
-.card-space {
-  margin: 3%;
+.card-text {
+  font-family: "Volkhov", serif;
 }
 
-.main-div {
-  width: 75%;
+.start-bid {
+  color: #8f4068;
 }
 
-.btn {
-  background-color: DodgerBlue;
-  /* Blue background */
-  border: none;
-  /* Remove borders */
-  color: white;
-  /* White text */
-  padding: 12px 16px;
-  /* Some padding */
-  font-size: 16px;
-  /* Set a font size */
-  cursor: pointer;
-  /* Mouse pointer on hover */
-}
-
-/* Darker background on mouse-over */
-.btn:hover {
-  background-color: RoyalBlue;
+.current-bid {
+  color: #7eca9c;
 }
 
 /*# sourceMappingURL=styles.css.map */

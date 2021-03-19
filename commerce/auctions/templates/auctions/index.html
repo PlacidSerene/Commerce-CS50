@@ -5,7 +5,7 @@
     <div class="row">
         {% for auction in auctions %}
         {% if auction.active == True %}
-        <div class="card col-lg-3 col-md-4 col-sm-6 card-space">
+        <div class="card col-lg-3 col-md-4 col-sm-6">
             {% if auction.image %}
             <img class="card-img-top" src="{{auction.image}}" alt="{{auction.title}}">
             {% else %}
@@ -16,9 +16,13 @@
             <div class="card-body">
                 <h5 class="card-title">{{auction.title}} </h5>
                 <p class="card-text">{{auction.description}}</p>
-                <p class="card-text">${{auction.start_bid}}</p>
-                <a href="#" class="btn btn-primary bg-dark">View</a>
-                <a href="#" class="btn btn-primary bg-dark">Close</a>
+                <p class="card-text current-bid">Current Bid: ${{auction.start_bid}}</p>
+                <p class="card-text start-bid">Starter Bid: ${{auction.start_bid}}</p>
+                <a class="btn btn-outline-primary" href="#" role="button">View</a>
+                <a class="btn btn-outline-secondary" href="#" role="button">Close</a>
+                <a class="btn btn-outline-danger" href="#" role="button">Favorite</a>
+                
+
             </div>
         </div>
         {% endif %}
@@ -26,6 +30,7 @@
         <h3>There's no auction for now!</h3>
         {% endfor %}
     </div>
+
 
 </main>
 

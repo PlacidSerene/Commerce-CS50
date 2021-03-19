@@ -5,17 +5,16 @@
 
 <head>
     <title>{% block title %}Auctions{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Vollkorn:ital@1&display=swap"
-        rel="stylesheet">
+    
+<link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Volkhov&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 1.3rem; color:black">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 1.3rem">
         <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
             <a class="navbar-brand" href="{% url 'index' %}">
                 <h2 class="logo"><em><i class="fab fa-sellcast"></i> Auction</em></h3>
@@ -26,7 +25,7 @@
             </button>
             <div class="collapse navbar-collapse text-center" id="navbarsExample11">
                 <ul class="navbar-nav">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'categories' %}">Categories</a>
                     </li>
                     <li class="nav-item">
@@ -35,6 +34,9 @@
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'watchlist' user.id %}">Watchlist</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout'%}">Log Out</a>
                     </li>
                     <li class="nav-item">
                         <div class="nav-item nav-link"> Signed in as <em>{{ user.username }}</em>.</div>
