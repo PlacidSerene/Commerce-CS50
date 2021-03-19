@@ -15,6 +15,7 @@ class Auction(models.Model):
     start_bid = models.FloatField()
     active = models.BooleanField(default=True, blank=False)
     current_winner = models.ForeignKey(User, blank=True, on_delete = models.CASCADE, related_name="winner", null=True)
+    
 class Bid(models.Model):
     price = models.FloatField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")

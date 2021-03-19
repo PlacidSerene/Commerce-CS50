@@ -79,9 +79,13 @@ def highest(auction):
 
 #////////////////////// Views Functions /////////////////////
 def index(request):
-    
+    auctions = Auction.objects.all()
+    dict1 = {}
+    for auction in auctions:
+        if auction.active == True:
+            dict1[auction] = highest(auction)
     return render(request, "auctions/index.html",{
-        "auctions": Auction.objects.all()
+        "auctions_dict": dict1,
     })
 
 
@@ -193,6 +197,7 @@ def bid(request, listing_id):
         if bid_price > highest(auction).price:
             Bid.objects.create(price=bid_price, user=request.user, auction=auction)
             auction.current_winner = request.user
+            auction.h
             auction.save()
             return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
         else:
