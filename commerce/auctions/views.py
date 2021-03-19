@@ -197,7 +197,6 @@ def bid(request, listing_id):
         if bid_price > highest(auction).price:
             Bid.objects.create(price=bid_price, user=request.user, auction=auction)
             auction.current_winner = request.user
-            auction.h
             auction.save()
             return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
         else:
