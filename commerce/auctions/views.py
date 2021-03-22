@@ -246,23 +246,26 @@ def categories(request):
 def category(request, category):
     if category == "No Category":
         auctions = Auction.objects.filter(categories="")
-        return render(request, "auctions/category.html", {
-        "auctions": auctions,
-        "title": "No Category"
-    })
     else:
         auctions = Auction.objects.filter(categories=category)
-        return render(request, "auctions/category.html", {
-            "auctions": auctions,
-            "category": category
-        })
+    dict1 = {}
+    for auction in auctions:
+        dict1[auction] = highest(auction)
+
+    return render(request, "auctions/category.html", {
+        "auctions": dict1,
+    })
 
 
 def watchlist(request, user_id):
     watchlist = request.user.watchlist.all()
+    dict1 = {}
+    for item in watchlist:
+        dict1[item.auction] = highest(item.auction)
     return render(request, "auctions/watchlist.html", {
-        "watchlist": watchlist,
+        "watchlist": dict1,
     })
+
 
 def toggle_watchlist(request, user_id, listing_id):
     if request.method == "POST":

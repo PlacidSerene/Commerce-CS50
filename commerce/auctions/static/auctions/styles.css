@@ -154,4 +154,8 @@ p {
   text-align: center;
 }
 
+.category {
+  border-style: dashed;
+}
+
 /*# sourceMappingURL=styles.css.map */
