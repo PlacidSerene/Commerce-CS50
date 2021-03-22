@@ -1,5 +1,5 @@
 body {
-  font-family: "Merriweather", serif;
+  font-family: "Volkhov", serif;
 }
 body main {
   width: 75%;
@@ -19,13 +19,16 @@ body main {
   font-family: "Merriweather", serif;
 }
 
-a:hover {
-  color: #caf7e3;
+.card-title {
+  font-family: "Chango", cursive;
+  color: #c15050;
+  margin-top: 1%;
 }
 
 .logo {
   text-align: center;
   color: #99bbad;
+  padding-top: 10px;
 }
 
 .card-text {
@@ -38,6 +41,117 @@ a:hover {
 
 .current-bid {
   color: #7eca9c;
+}
+
+p {
+  font-family: "Volkhov", serif;
+}
+
+.user_card {
+  height: 400px;
+  width: 350px;
+  margin-bottom: auto;
+  background: #f4f9f9;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+}
+
+.form_container {
+  margin-top: 40px;
+}
+
+.login_btn {
+  width: 100%;
+  background: #78c4d4 !important;
+  color: white !important;
+}
+
+.login_btn:focus {
+  box-shadow: none !important;
+  outline: 0px !important;
+}
+
+.login_container {
+  padding: 0 2rem;
+}
+
+.input-group-text {
+  background: #78c4d4 !important;
+  color: white !important;
+  border: 0 !important;
+  border-radius: 0.25rem 0 0 0.25rem !important;
+}
+
+.input_user,
+.input_pass:focus {
+  box-shadow: none !important;
+  outline: 0px !important;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #c0392b !important;
+}
+
+.login {
+  margin-top: 2%;
+}
+
+.comment {
+  color: #000000;
+  padding: 2%;
+  background-color: #aee6e6;
+}
+
+.user-comment {
+  font-family: "Syne Mono", monospace;
+}
+
+.thing {
+  padding: 1rem;
+  width: 420px;
+  box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11), 0 5px 15px 0 rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  border-left: 0 solid #caf7e3;
+  transition: border-left 300ms ease-in-out, padding-left 300ms ease-in-out;
+}
+
+.thing:hover {
+  padding-left: 0.5rem;
+  border-left: 0.5rem solid #caf7e3;
+}
+
+.thing > :first-child {
+  margin-top: 0;
+}
+
+.thing > :last-child {
+  margin-bottom: 0;
+}
+
+.fit-image {
+  width: 100%;
+  object-fit: cover;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.group {
+  margin-top: 10%;
+}
+
+.winning-alert {
+  font-family: "Lobster", cursive;
+  text-align: center;
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -5,6 +5,7 @@
     <div class="row">
         {% for auction, highest in auctions_dict.items %}
         {% if auction.active == True %}
+
         <div class="card col-lg-3 col-md-4 col-sm-6">
             {% if auction.image %}
             <img class="card-img-top" src="{{auction.image}}" alt="{{auction.title}}">
@@ -14,7 +15,7 @@
                 alt="No Image">
             {% endif %}
             <div class="card-body">
-                <h5 class="card-title">{{auction.title}} </h5>
+                <h5 class="card-title">{{auction.title}}</h5>
                 <p class="card-text">{{auction.description}}</p>
                 {% if highest %}
                 <p class="card-text current-bid">Current Bid: ${{highest}}</p>
@@ -22,13 +23,14 @@
                 <p class="card-text current-bid">Current Bid: ${{auction.start_bid}}</p>
                 {% endif %}
                 <p class="card-text start-bid">Starter Bid: ${{auction.start_bid}}</p>
-                <a class="btn btn-outline-primary" href="#" role="button">View</a>
+                <a class="btn btn-outline-primary" href="{% url 'listing' auction.id %}" role="button">View</a>
                 <a class="btn btn-outline-secondary" href="#" role="button">Close</a>
-                <a class="btn btn-outline-danger" href="#" role="button">Favorite</a>
-                
+
+
 
             </div>
         </div>
+
         {% endif %}
         {% empty %}
         <h3>There's no auction for now!</h3>

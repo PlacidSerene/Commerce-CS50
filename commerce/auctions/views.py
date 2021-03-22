@@ -45,7 +45,10 @@ class Bid_Form(ModelForm):
         model = Bid
         fields = ["price"]
         widgets = {
-            "price": NumberInput(attrs={'class':'form-control'}),
+            "price": NumberInput(attrs={'class':'form-control bid-field'}),
+        }
+        labels = {
+            "price": ""
         }
     def clean_price(self, *args, **kwargs):
         price = self.cleaned_data.get("price")
@@ -53,13 +56,6 @@ class Bid_Form(ModelForm):
             raise forms.ValidationError("Should be at least $1")
         return price
 
-class Comment_Form(ModelForm):
-    class Meta:
-        model = Comment
-        fields = ["comment"]
-        widgets = {
-            "comment": TextInput(attrs={'class':'form-control'}),
-        }
 
     
 
@@ -171,20 +167,20 @@ def listing(request, listing_id):
         auction = Auction.objects.get(id=listing_id)
     except Auction.DoesNotExist:
         raise Http404("Auction not found")
-    
+    watchlist = ""
     if request.user.is_authenticated:
-        # Get all autions from watchlist 
+        # Get all autions from watchlist of the current user
         watchlist = [item.auction for item in request.user.watchlist.all()]
+
     return render(request, "auctions/listing.html",{
         "auction":auction,
         "bid_form": Bid_Form(),
         "highest_bid": highest(auction),
         "watchlist": watchlist,
-        "comment_form": Comment_Form(),
         "comments": auction.comment_auctions.all()
     })
 
-
+@login_required(login_url="login")
 def bid(request, listing_id):
 
     if request.method == "GET":
@@ -220,7 +216,7 @@ def bid(request, listing_id):
         return HttpResponseRedirect(reverse("listing", kwargs={"listing_id":listing_id}))
 
     
-
+@login_required(login_url="login")
 def comment(request, listing_id):
     if request.method == "GET":
         raise Http404("Page not found")
