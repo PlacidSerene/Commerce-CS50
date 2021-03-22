@@ -23,8 +23,19 @@
                 <p class="card-text current-bid">Current Bid: ${{auction.start_bid}}</p>
                 {% endif %}
                 <p class="card-text start-bid">Starter Bid: ${{auction.start_bid}}</p>
-                <a class="btn btn-outline-primary" href="{% url 'listing' auction.id %}" role="button">View</a>
-                <a class="btn btn-outline-secondary" href="#" role="button">Close</a>
+                <div class="row justify-content-start">
+                    <div class="col-3">
+                        <a class="btn btn-outline-primary" href="{% url 'listing' auction.id %}" role="button">View</a>
+                    </div>
+                    {% if user == auction.created_user %}
+                    <div class="col-3" style="padding-left: 0;">
+                        <form action="{% url 'close_auction' auction.id%}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-outline-secondary" value="Close">
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
 
 
 
